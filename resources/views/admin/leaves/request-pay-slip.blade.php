@@ -1,0 +1,223 @@
+@extends('admin.layout.index')
+@section('css')
+<link rel="stylesheet" href="{{ url('admin-assets/node_modules/dropify/dist/css/dropify.min.css') }}">
+<style>
+    .badge {
+        cursor: context-menu !important;
+    }
+
+    .addClass
+    {
+        display: none;
+    }
+</style>
+@endsection
+@section('title')  Request Pay Slip @endsection
+@section('content')
+<!-- BEGIN: Content -->
+<div class="content">
+    <!-- BEGIN: Top Bar -->
+    @section('navigation')
+    <div class="-intro-x breadcrumb me-auto d-none d-sm-flex">
+        <a href="{{ route('AdminDashboard') }}"><span class="">{{ __('labels.dashboard_navigation') }}</span></a>
+        <i class="feather-chevron-right" class="breadcrumb__icon"></i>
+        <a href="{{ route('requestPaySlip') }}"><span class="breadcrumb--active"> Request Pay Slip </span></a>
+    </div>
+    @endsection
+    @include('admin.common.notification')
+
+
+    <div class="row mt-3">
+        {{-- <div class="form-group col-md-4">
+            <label for="daterange"><span class="fa fa-filter mb-2"></span> {{ __('labels.leave_type') }}</label>
+            <select id="leave_type" name="leave_type" class="form-select form-select mt-2 leave_type">
+                <option value="0">{{ __('labels.all_leave_type') }}</option>
+                <option value="{{__('labels.casual_leave')}}">{{ __('labels.casual_leave') }}</option>
+                <option value="{{__('labels.medical_leave')}}">{{ __('labels.medical_leave') }}</option>
+            </select>
+        </div> --}}
+
+        <div class="form-group col-md-4">
+            <label for="daterange"><span class="fa fa-filter mb-2"></span> {{ __('labels.status') }}</label>
+            <select id="leave_status" name="leave_status" class="form-select form-select mt-2 leave_status select2Class">
+                <option value="0">{{ __('labels.all_status') }}</option>
+                <option value="{{__('labels.pending')}}">{{ __('labels.pending') }}</option>
+                <option value="{{__('labels.approved')}}">{{ __('labels.approved') }}</option>
+                <option value="{{__('labels.rejected')}}">{{ __('labels.rejected') }}</option>
+            </select>
+        </div>
+
+        @if(count($userNameList) >0 )
+
+        <div class="form-group col-md-4">
+            <label for="name"><span class="fa fa-filter mb-2"></span> Executive</label>
+            <select id="employeeType" name="employeeType"
+                class="form-select form-select mt-2 employeeType select2Class">
+                <option value="0" selected>All Executive</option>
+                @foreach($userNameList as $name)
+                <option value="{{ $name->id }}">{{ $name->fullName }}</option>
+                @endforeach
+            </select>
+        </div>
+
+    @endif
+    </div>
+
+
+    <!-- END: Top Bar -->
+    <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12  grid-cols-12 gap-6">
+            <!-- BEGIN: General Report -->
+            <div class="col-span-12 mt-4">
+                <div class="intro-y d-flex align-items-center h-10">
+                    <h2 class="text-lg font-medium truncate me-4 mb-0"> Request Pay Slip List
+                    </h2>
+                </div>
+                @include('admin.common.flash')
+                <br><br>
+                <div class="table-responsive">
+                    <table id="leaves" class="display nowrap table table-hover table-striped table-bordered last-cl-fxied"
+                        cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>{{ __('labels.no') }}</th>
+                                <th>Request Month Year</th>
+                                <th>{{ __('labels.full_name') }}</th>
+                                <th>{{ __('labels.leave_type') }}</th>
+                                <th>{{ __('labels.fromDate') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END: General Report -->
+        </div>
+    </div>
+</div>
+<!-- END: Content -->
+@include('admin.leaves.modal1')
+
+@endsection
+
+@section('js')
+<script src="{{ url('admin-assets/node_modules/dropify/dist/js/dropify.min.js') }}"></script>
+<script>
+    var table;
+    $(function() {
+        table = $('#leaves').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollX: true,
+            scrollY: true,
+            "ajax": {
+                "url": '{{ url(route('requestPaySlipSearch')) }}',
+                "type": "POST",
+                "headers": {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                "async": false,
+                "data": function ( d ) {
+                    d.leave_type = $('#leave_type').val();
+                    d.leave_status = $('#leave_status').val();
+                    d.employeeType = $('#employeeType').val();
+                }
+            },
+            aaSorting: true,
+            columns: [{
+                    data: 'sr_no',
+                    name: 'sr_no',
+                    orderable: false
+                },
+                {
+                    data: 'createdAtFormate',
+                    name: 'createdAtFormate',
+                    "visible": false,
+                },
+                {
+                    data: 'fullName',
+                    name: 'fullName',
+                },
+                {
+                    data: 'rPDate',
+                    name: 'rPDate'
+                },
+                {
+                    data: 'rPStatus',
+                    name: 'rPStatus',
+                    orderable: false
+                },
+
+
+            ],
+            "aaSorting": [
+                [1, 'desc']
+            ],
+            "pageLength": 50
+        });
+
+        // filter after reload table
+
+    });
+
+    $('.dropify').dropify();
+
+    $(document).on('change', 'select', function() {
+            table.ajax.reload();
+        });
+
+    $("#leaves").on('change', '.btnChangeStatus', function() {
+
+        $('#status-confirmation-modal').modal('show');
+        var status = $(this).prop('checked') ? "activate" : "inactive";
+
+        var userType = $(this).attr('data-userType');
+
+        $('#statusTitle').text('Do you really want to ' + status + ' this leave?');
+        $('#statusData').attr('data-status-link', $(this).attr('data-url'));
+
+    });
+
+
+
+    $(document).on("change",'.requestStatus',function(event) {
+
+        var statusValue = $(this).val();
+
+        if(statusValue == "Approved")
+            {
+                $('.paySleepPdf').removeClass('addClass');
+                $(".payPdf").prop('required',true);
+            }else{
+                $('.paySleepPdf').addClass('addClass')
+                $(".payPdf").prop('required',false);
+            }
+
+    });
+
+
+    $(document).on("click",'.btnChangeUserStatus',function(event) {
+        event.preventDefault();
+        var statusValue = $(this).attr('data-st');
+        var id = $(this).attr('data-id');
+
+             $('#id').val(id);
+
+            if(statusValue == "Pending"){
+                $('#leaveStatusChange-modal1').modal('show');
+            }
+    });
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $( function() {
+    $(".select2Class").select2({
+});
+});
+</script>
+
+@endsection
