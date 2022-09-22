@@ -97,9 +97,18 @@ class AdminInOutController extends Controller
                 ->whereDate('in_outs.date', '<=', $endDate);
             }
 
+            // if(\Auth::user()->roleId == config('constant.ma_id'))
+            // {
+            //     $query = $query->where('roleId','=',config('constant.marketing_executive_id'));
+            // }
+
             if(\Auth::user()->roleId == config('constant.ma_id'))
             {
-                $query = $query->where('roleId','=',config('constant.marketing_executive_id'));
+                $query = $query->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
+                    return $query->whereIn('users.id',  User::getMarketingAdminEmployee());
+                });
+
+                // $query = $query->where('roleId','=',config('constant.marketing_executive_id'));
             }
 
             $orderDir      = $request->order[0]['dir'];

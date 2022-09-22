@@ -304,7 +304,10 @@ class AdminDealerController extends Controller
     {
         $data['dealerDetail'] = "";
         $data['users'] = User::selectRaw('id,fullName')->where(['userStatus' => 'Approved'])
-                             ->whereIn('roleId',User::whichUserLogin())
+                            //  ->whereIn('roleId',User::whichUserLogin())
+                             ->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
+                                return $query->whereIn('id',  User::getMarketingAdminEmployee());
+                            })
                             ->get();
         $data['states'] = State::selectRaw('states.*')->join('cities','cities.stateId','states.id')->groupBy('states.id')->where('states.isActive',1)->get();
         $data['regions'] = Regions::where('isActive',1)->get();

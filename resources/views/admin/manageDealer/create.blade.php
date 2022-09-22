@@ -920,22 +920,22 @@
 
 <script type="text/javascript">
 
-    google.maps.event.addDomListener(window, 'load', initialize);
-        function initialize() {
-            var input = document.getElementById('location');
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.addListener('place_changed', function () {
-                var place = autocomplete.getPlace();
+    // google.maps.event.addDomListener(window, 'load', initialize);
+    //     function initialize() {
+    //         var input = document.getElementById('location');
+    //         var autocomplete = new google.maps.places.Autocomplete(input);
+    //         autocomplete.addListener('place_changed', function () {
+    //             var place = autocomplete.getPlace();
 
-                var address = place.formatted_address;
-                var area = place.address_components[1].long_name+', '+place.address_components[2].long_name;
+    //             var address = place.formatted_address;
+    //             var area = place.address_components[1].long_name+', '+place.address_components[2].long_name;
 
-                $('#latitude').val(place.geometry['location'].lat());
-                $('#longitude').val(place.geometry['location'].lng());
-                $('#address1').val(address);
-                $('#address2').val(area);
-            });
-        }
+    //             $('#latitude').val(place.geometry['location'].lat());
+    //             $('#longitude').val(place.geometry['location'].lng());
+    //             $('#address1').val(address);
+    //             $('#address2').val(area);
+    //         });
+    //     }
 
     $( function() {
         $( ".datepickerdate1" ).datepicker({

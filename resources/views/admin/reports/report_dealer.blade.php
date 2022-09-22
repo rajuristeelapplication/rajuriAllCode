@@ -59,6 +59,8 @@
                         <div class="form-group col-md-4">
                             <label for="daterange"><span class="fa fa-filter mb-2"></span> {{ __('labels.users_type') }}</label>
                             <select id="userType" name="userType" class="form-select form-select mt-2 userType">
+                                <option value="">{{ __('labels.all_user_type') }}</option>
+                                <option value="{{config('constant.sales_executive_id')}}">{{ __('labels.sales_executive') }}</option>
                                 <option value="{{config('constant.marketing_executive_id')}}">{{ __('labels.marketing_executive') }}
                                 </option>
                             </select>

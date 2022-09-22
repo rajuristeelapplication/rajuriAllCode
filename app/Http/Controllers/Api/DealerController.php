@@ -221,7 +221,6 @@ class DealerController extends Controller
             'hasMore' => $getDealers->hasMorePages(),
             'totalCount' => $getDealers->total(),
             'getDealers' => $getDealers->items(),
-
         ]);
 
 

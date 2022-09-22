@@ -601,18 +601,18 @@
         });
 </script>
 <script>
-    google.maps.event.addDomListener(window, 'load', initialize);
-        function initialize() {
-            var input = document.getElementById('slocation');
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.addListener('place_changed', function () {
-                var place = autocomplete.getPlace();
-                $('#latitude').val(place.geometry['location'].lat());
-                $('#longitude').val(place.geometry['location'].lng());
-                $("#latitudeArea").removeClass("d-none");
-                $("#longtitudeArea").removeClass("d-none");
-            });
-        }
+    // google.maps.event.addDomListener(window, 'load', initialize);
+    //     function initialize() {
+    //         var input = document.getElementById('slocation');
+    //         var autocomplete = new google.maps.places.Autocomplete(input);
+    //         autocomplete.addListener('place_changed', function () {
+    //             var place = autocomplete.getPlace();
+    //             $('#latitude').val(place.geometry['location'].lat());
+    //             $('#longitude').val(place.geometry['location'].lng());
+    //             $("#latitudeArea").removeClass("d-none");
+    //             $("#longtitudeArea").removeClass("d-none");
+    //         });
+    //     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>

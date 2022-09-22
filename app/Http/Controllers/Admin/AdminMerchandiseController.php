@@ -283,9 +283,9 @@ class AdminMerchandiseController extends Controller
         $data['merchandiseDetail'] = '';
         $data['userDetail'] = User::selectRaw('id,fullName')
                             ->where(['userStatus' => 'Approved'])
-                            ->whereIn('roleId',User::whichUserLogin())
+                            // ->whereIn('roleId',User::whichUserLogin())
                             ->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
-                                return $query->whereIn('merchandises.userId',  User::getMarketingAdminEmployee());
+                                return $query->whereIn('id',  User::getMarketingAdminEmployee());
                             })
 
                             ->orderBy('fullName','asc')

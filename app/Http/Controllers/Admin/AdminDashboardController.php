@@ -753,6 +753,9 @@ class AdminDashboardController extends Controller
                             ->join('users','users.id','in_outs.userId')
                             // ->where('users.roleId',config('constant.sales_executive_id'))
                             ->whereIn('users.roleId',User::whichUserLogin())
+                            ->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
+                                return $query->whereIn('users.id',  User::getMarketingAdminEmployee());
+                            })
                             ->when(!empty($startDate) && !empty($endDate) , function ($query) use ($startDate,$endDate) {
                                 $query->whereDate('in_outs.createdAt', '>=', $startDate)
                                         ->whereDate('in_outs.createdAt', '<=', $endDate);

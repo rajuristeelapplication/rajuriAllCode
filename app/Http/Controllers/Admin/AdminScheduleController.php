@@ -23,7 +23,7 @@ class AdminScheduleController extends Controller
         $userNameList = Schedule::selectRaw('users.id,users.fullName,users.roleId')
                                 ->join('users','users.id','schedules.userId')
                                 ->distinct('users.fullName')
-                                ->whereIn('roleId',User::whichUserLogin())
+                                // ->whereIn('roleId',User::whichUserLogin())
                                 ->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
                                     return $query->whereIn('schedules.userId',  User::getMarketingAdminEmployee());
                                 })
@@ -35,7 +35,7 @@ class AdminScheduleController extends Controller
                                 ->join('dealers','dealers.id','schedules.rjDealerId')
                                 ->join('users','users.id','schedules.userId')
                                 ->distinct('schedules.rjDealerId')
-                                ->whereIn('roleId',User::whichUserLogin())
+                                // ->whereIn('roleId',User::whichUserLogin())
                                 ->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
                                     return $query->whereIn('schedules.userId',  User::getMarketingAdminEmployee());
                                 })
@@ -128,13 +128,11 @@ class AdminScheduleController extends Controller
 
               if(\Auth::user()->roleId == config('constant.ma_id'))
               {
-                  $query = $query->where('roleId','=',config('constant.marketing_executive_id'));
+                //   $query = $query->where('roleId','=',config('constant.marketing_executive_id'));
 
                   $query = $query->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
                     return $query->whereIn('schedules.userId',  User::getMarketingAdminEmployee());
                 });
-
-
               }
 
             $orderDir      = $request->order[0]['dir'];
@@ -241,7 +239,7 @@ class AdminScheduleController extends Controller
     public function create()
     {
         $userDetail = User::where('isActive', 1)->where(['userStatus' => 'Approved'])
-                    ->whereIn('roleId',User::whichUserLogin())
+                    // ->whereIn('roleId',User::whichUserLogin())
                     ->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
                         return $query->whereIn('id',  User::getMarketingAdminEmployee());
                     })
@@ -368,7 +366,7 @@ class AdminScheduleController extends Controller
 
         $dealer = $dealer->join('users','users.id','dealers.userId')
                                 ->distinct('dealers.id')
-                                ->whereIn('roleId',User::whichUserLogin())
+                                // ->whereIn('roleId',User::whichUserLogin())
                                 ->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
                                     return $query->whereIn('dealers.userId',  User::getMarketingAdminEmployee());
                                 })

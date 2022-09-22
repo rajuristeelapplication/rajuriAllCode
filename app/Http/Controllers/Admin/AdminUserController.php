@@ -385,6 +385,7 @@ class AdminUserController extends Controller
 
     public function editDiffUser(Request $request)
     {
+
         $userId =   $request->id;
 
         $where[] = ['users.id', $userId];

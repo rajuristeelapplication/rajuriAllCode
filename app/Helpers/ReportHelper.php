@@ -98,7 +98,7 @@ class ReportHelper
         }
 
         $result = $result->when(!empty(\Auth::user() && \Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
-            return $query->whereIn('id',  User::getMarketingAdminEmployee());
+            return $query->whereIn('users.id',  User::getMarketingAdminEmployee());
         });
 
 
@@ -640,7 +640,7 @@ class ReportHelper
 
         if( !empty(\Auth::user()) && \Auth::user()->roleId == config('constant.ma_id'))
         {
-            $result = $result->where('roleId','=',config('constant.marketing_executive_id'));
+            // $result = $result->where('roleId','=',config('constant.marketing_executive_id'));
 
             $result = $result->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
                 return $query->whereIn('dealers.userId',  User::getMarketingAdminEmployee());
