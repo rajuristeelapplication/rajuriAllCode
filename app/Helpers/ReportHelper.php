@@ -518,7 +518,7 @@ class ReportHelper
         {
             $result = $result->where('roleId','=',config('constant.marketing_executive_id'));
 
-            $query = $query->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
+            $result = $result->when(!empty(\Auth::user()->roleId == config('constant.ma_id')), function ($query)  {
                 return $query->whereIn('schedules.userId',  User::getMarketingAdminEmployee());
             });
         }
