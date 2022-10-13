@@ -296,7 +296,7 @@ dateFormat: 'mm-dd',
         'maxDate': new Date(),
         'drops': "down",
         'dateLimit': {
-            days: 91
+            days: 365
         },
         locale: {
             format: 'DD/MM/YYYY'
